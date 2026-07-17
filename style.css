@@ -25,10 +25,9 @@ body {
 }
 
 #sav {
-   border: solid blue;
    margin: 50px 10vw;
    width: 100vw;
    height: 750px;
    display: flex;
-   align-items: center;
+   align-items: flex-end;
 }
