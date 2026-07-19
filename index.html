@@ -14,6 +14,40 @@
       <div id="sav"></div>
    </div>
    
+   <div id="settings">
+      <input type="button" class="button" onClick="reset()" value="Reset">
+      <input type="button" class="button" onClick="shuffle()" value="Shuffle">
+      <input type="button" class="button" onClick="sort()" value="Sort">
+      
+      <input type="range" id="bars" min="16" max="256" step="16" value="64">
+
+      <select name="algorithms" id="algorithm-dropdown">
+         <optgroup label="Basic">
+            <option value="bubble">Bubble Sort</option>
+            <option value="cocktail">Cocktail Sort</option>
+            <option value="selection">Selection Sort</option>
+            <option value="insertion">Insertion Sort</option>
+         </optgroup>
+
+         <optgroup label="Comparison">
+            <option value="heap">Heap Sort</option>
+            <option value="comb">Comb Sort</option>
+            <option value="shell">Shell Sort</option>
+         </optgroup>
+
+         <optgroup label="Divide & Conquer">
+            <option value="quick">Quick Sort</option>
+            <option value="merge">Merge Sort</option>
+         </optgroup>
+
+         <optgroup label="Distribution">
+            <option value="radix">Radix Sort</option>
+            <option value="bucket">Bucket Sort</option>
+            <option value="counting">Counting Sort</option>
+         </optgroup>
+      </select>
+   </div>
+
    <script src="script.js"></script>
 </body>
 
