@@ -4,21 +4,21 @@ let settings = {
    readDelay: 5,
    writeDelay: 5,
    shuffle: "fisher-yates",
-   sort: "bubble"
+   sort: "selection"
 }
 let stopSort;
 
-reset(true);
+reset(false);
 
-function reset(firstTime) {
+function reset(stop) {
    let tempList = [];
    for (let i = 1; i <= settings.n; i++) {tempList.push(i);}
    list = tempList;
 
-   if (firstTime) {
-      stopSort = false;
-   } else {
+   if (stop) {
       stopSort = true;
+   } else {
+      stopSort = false;
    }
    
    render();
@@ -26,7 +26,7 @@ function reset(firstTime) {
 
 function shuffle() {
    switch (settings.shuffle) {
-      case "fisher-yates":
+      case "fisher-yates": 
          for (let i = list.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [list[i], list[j]] = [list[j], list[i]];
@@ -61,14 +61,14 @@ function render(options = {}) {
 }
 
 function sort() {
-   let steps = window[settings.sort + "Sort"]([...list]);
-   console.log(steps);
+   let [steps, listPositions] = window[settings.sort + "Sort"]([...list]);
+   let j = 0;
 
    function animate() {
       if (steps.length === 0) {
          let k = 0;
          function completionCheck() {
-            render(undefined, k);
+            render({checked: k});
             k++;
             if (k < list.length) {
                setTimeout(completionCheck, 500 / settings.n);
@@ -93,12 +93,11 @@ function sort() {
          render({readIndices: step.indices});
          delay = settings.readDelay;
       } else if (step.type === "write") {
-         let [i, j] = step.indices;
-         [list[i], list[j]] = [list[j], list[i]];
+         j++;
+         list = listPositions[j];
          render({writeIndices: step.indices});
          delay = settings.writeDelay;
       }
-
       setTimeout(animate, delay);
    }
    animate();
@@ -108,7 +107,7 @@ function map(value, low1, high1, low2, high2) {return low2 + (high2 - low2) * (v
 
 document.getElementById("bars").addEventListener("input", (e) => {
    settings.n = e.target.value;
-   reset()
+   reset(false)
    render();
 });
 
@@ -118,24 +117,30 @@ document.getElementById("bars").addEventListener("input", (e) => {
 // SORTING ALGORITHMS
 
 function bubbleSort(list) {
-   let steps = [];
-   let swapped = true;
    let n = list.length;
+   let steps = [];
+   let listPositions = [[...list]];
+   let swapped = true;
+   
 
-   while (swapped) { // keep looping until no swaps have been made
+   for (let i = 0; i < n - 1; i++) { // keep looping until no swaps have been made
       swapped = false;
-      for (let i = 0; i < n; i++) { // loop over each element in the list
-         if (list[i] > list[i + 1]) { // if the current element is greater than the next element
+      for (let j = 0; j < n - i - 1; j++) { // loop over each element in the list
+         steps.push({type: "read", indices: [j, j + 1]});
+
+         if (list[j] > list[j + 1]) { // if the current element is greater than the next element
             
-            [list[i], list[i + 1]] = [list[i + 1], list[i]]; // swap the current element and the next element
-            steps.push({type: "write", indices: [i, i + 1]});
-            swapped = true; // a swap has been made, so continue looping
+            [list[j], list[j + 1]] = [list[j + 1], list[j]]; // swap the current element and the next element
+            steps.push({type: "write", indices: [j, j + 1]});
+            listPositions.push([...list]);
+            swapped = true;
          }
-         steps.push({type: "read", indices: [i, i + 1]});
       }
+
+      if (!swapped) {break;}
    }
 
-   return steps;
+   return [steps, listPositions];
 }
 
 /*function cocktailSort(list) {
@@ -158,9 +163,10 @@ function bubbleSort(list) {
 }*/
 
 function selectionSort(list) {
+   let n = list.length;
    let steps = [];
    let swapped = true;
-   let n = list.length;
+   let listPositions = [[...list]];
 
    for (let i = 0; i < n; i++) { // loop over each element in the list
       let smallest = i;
@@ -169,9 +175,34 @@ function selectionSort(list) {
          steps.push({type: "read", indices: [smallest, j]});
       }
 
-      [list[i], list[smallest]] = [list[smallest], list[i]];
+      [list[i], list[smallest]] = [list[smallest], list[i]]; // swap the current index with the smallest element
       steps.push({type: "write", indices: [i, smallest]});
+      listPositions.push([...list]);
    }
 
-   return steps;
+   return [steps, listPositions];
+}
+
+function insertionSort(list) {
+   let n = list.length;
+   let steps = [];
+   let listPositions = [[...list]];
+
+   for (let i = 1; i < n; i++) { // key
+      let key = list[i];
+      let j;
+
+      for (j = i - 1; j >= 0 && list[j] > key; j--) {
+         steps.push({type: "read", indices: [j, i]});
+         list[j + 1] = list[j];
+         steps.push({type: "write", indices: [j + 1, j]});
+         listPositions.push([...list]);
+      }
+
+      list[j + 1] = key;
+      steps.push({type: "write", indices: [j + 1, j]});
+      listPositions.push([...list]);
+   }
+
+   return [steps, listPositions];
 }
