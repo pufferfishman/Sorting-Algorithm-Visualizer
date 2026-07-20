@@ -216,7 +216,7 @@ function insertionSort(list) {
    let steps = [];
    let listPositions = [[...list]];
 
-   for (let i = 1; i < n; i++) { // key
+   for (let i = 1; i < n; i++) {
       let key = list[i];
       let j;
 
@@ -228,7 +228,7 @@ function insertionSort(list) {
       }
 
       list[j + 1] = key;
-      steps.push({type: "write", indices: [j + 1, j]});
+      steps.push({type: "write", indices: [j + 1, i]});
       listPositions.push([...list]);
    }
 
@@ -249,8 +249,8 @@ function combSort(list) {
       swapped = false;
 
       for (let i = 0; i < n - gap; i++) {
+         steps.push({type: "read", indices: [i, i + gap]});
          if (list[i] > list[i + gap]) {
-            steps.push({type: "read", indices: [i, i + gap]});
             [list[i], list[i + gap]] = [list[i + gap], list[i]];
             steps.push({type: "write", indices: [i, i + gap]});
             listPositions.push([...list]);
@@ -258,6 +258,42 @@ function combSort(list) {
          }
       }
       
+   }
+
+   return [steps, listPositions];
+}
+
+function heapSort(list) {
+   let n = list.length;
+   let steps = [];
+   let listPositions = [[...list]];
+
+   
+
+   return [steps, listPositions];
+}
+
+function shellSort(list) {
+   let n = list.length;
+   let steps = [];
+   let listPositions = [[...list]];
+
+   for (let gap = Math.floor(n / 2); gap > 0; gap = Math.floor(gap / 2)) {
+      for (let i = gap; i < n; i++) {
+         let temp = list[i];
+         let j;
+
+         for (j = i; j >= gap && list[j - gap] > temp; j -= gap) {
+            steps.push({type: "read", indices: [j - gap, i]});
+            list[j] = list[j - gap];
+            steps.push({type: "write", indices: [j, j - gap]});
+            listPositions.push([...list]);
+         }
+
+         list[j] = temp;
+         steps.push({type: "write", indices: [j, i]});
+         listPositions.push([...list]);
+      }
    }
 
    return [steps, listPositions];
