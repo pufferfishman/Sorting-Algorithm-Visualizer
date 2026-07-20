@@ -1,10 +1,10 @@
 let list;
 let settings = {
    n: 64,
-   readDelay: 5,
-   writeDelay: 5,
+   readDelay: 0,
+   writeDelay: 0,
    shuffle: "fisher-yates",
-   sort: "selection"
+   sort: "bubble"
 }
 let stopSort;
 
@@ -35,6 +35,7 @@ function shuffle() {
 
    render();
 }
+
 function render(options = {}) {
    let sav = document.getElementById("sav");
    sav.innerHTML = "";
@@ -105,10 +106,14 @@ function sort() {
 
 function map(value, low1, high1, low2, high2) {return low2 + (high2 - low2) * (value - low1) / (high1 - low1);}
 
-document.getElementById("bars").addEventListener("input", (e) => {
+document.getElementById("n-slider").addEventListener("input", (e) => {
    settings.n = e.target.value;
    reset(false)
    render();
+});
+
+document.getElementById("algorithm-dropdown").addEventListener("change", (e) => {
+   settings.sort = e.target.value;
 });
 
 
@@ -122,7 +127,6 @@ function bubbleSort(list) {
    let listPositions = [[...list]];
    let swapped = true;
    
-
    for (let i = 0; i < n - 1; i++) { // keep looping until no swaps have been made
       swapped = false;
       for (let j = 0; j < n - i - 1; j++) { // loop over each element in the list
@@ -137,30 +141,54 @@ function bubbleSort(list) {
          }
       }
 
-      if (!swapped) {break;}
+      if (!swapped) break;
    }
 
    return [steps, listPositions];
 }
 
-/*function cocktailSort(list) {
-   let swapsList = [];
-   var swapped = true;
+function cocktailSort(list) {
    let n = list.length;
-
-   while (swapped) {
+   let steps = [];
+   let listPositions = [[...list]];
+   var swapped = true;
+   let start = 0;
+   let end = n;
+   
+   for (let i = 0; i < n - 1; i++) { // keep looping until no swaps have been made
       swapped = false;
-      for (let i = 0; i < n; i++) {
-         if (list[i - 1] > list[i]) {
-            swapsList.push([i - 1, i]);
+      for (let j = start; j < end - 1; j++) { // loop over each element in the list
+         steps.push({type: "read", indices: [j, j + 1]});
+
+         if (list[j] > list[j + 1]) { // if the current element is greater than the next element
+            
+            [list[j], list[j + 1]] = [list[j + 1], list[j]]; // swap the current element and the next element
+            steps.push({type: "write", indices: [j, j + 1]});
+            listPositions.push([...list]);
             swapped = true;
-            [list[i - 1], list[i]] = [list[i], list[i - 1]];
          }
       }
+
+      if (!swapped) break;
+      end--;
+
+      swapped = false;
+      for (let j = end - 1; j >= start; j--) { // loop over each element in the list
+         steps.push({type: "read", indices: [j, j + 1]});
+
+         if (list[j] > list[j + 1]) { // if the current element is greater than the next element
+            [list[j], list[j + 1]] = [list[j + 1], list[j]]; // swap the current element and the next element
+            steps.push({type: "write", indices: [j, j + 1]});
+            listPositions.push([...list]);
+            swapped = true;
+         }
+      }
+
+      start++;
    }
 
-   return swapsList;
-}*/
+   return [steps, listPositions];
+}
 
 function selectionSort(list) {
    let n = list.length;
@@ -202,6 +230,34 @@ function insertionSort(list) {
       list[j + 1] = key;
       steps.push({type: "write", indices: [j + 1, j]});
       listPositions.push([...list]);
+   }
+
+   return [steps, listPositions];
+}
+
+function combSort(list) {
+   let n = list.length;
+   let steps = [];
+   let listPositions = [[...list]];
+   let swapped = true;
+   let gap = n;
+
+   while (gap != 1 || swapped) {
+      gap = parseInt((gap * 10) / 13);
+      if (gap < 1) gap = 1;
+
+      swapped = false;
+
+      for (let i = 0; i < n - gap; i++) {
+         if (list[i] > list[i + gap]) {
+            steps.push({type: "read", indices: [i, i + gap]});
+            [list[i], list[i + gap]] = [list[i + gap], list[i]];
+            steps.push({type: "write", indices: [i, i + gap]});
+            listPositions.push([...list]);
+            swapped = true;
+         }
+      }
+      
    }
 
    return [steps, listPositions];
