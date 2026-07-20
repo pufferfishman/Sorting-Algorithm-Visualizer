@@ -50,7 +50,7 @@ function render(options = {}) {
       if (writeIndices && writeIndices.includes(i)) {
          bar.style.backgroundColor = "var(--red)";
       } else if (readIndices && readIndices.includes(i)) {
-         bar.style.backgroundColor = "var(--yellow)";
+         bar.style.backgroundColor = "var(--blue)";
       } else if (checked >= i) {
          bar.style.backgroundColor = "var(--green)";
       } else {
@@ -268,7 +268,39 @@ function heapSort(list) {
    let steps = [];
    let listPositions = [[...list]];
 
-   
+   function heapify(list, n, i) {
+      let largest = i;
+      let left = 2 * i + 1;
+      let right = 2 * i + 2;
+
+      if (left < n) {
+         steps.push({type: "read", indices: [left, largest]});
+         if (list[left] > list[largest]) {largest = left;}
+      }
+
+      if (right < n) {
+         steps.push({type: "read", indices: [right, largest]});
+         if (list[right] > list[largest]) {largest = right;}
+      }
+
+      if (largest != i) {
+         [list[i], list[largest]] = [list[largest], list[i]];
+         steps.push({type: "write", indices: [i, largest]});
+         listPositions.push([...list]);
+
+         heapify(list, n, largest);
+      }
+   }
+
+   for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {heapify(list, n, i);}
+
+   for (let i = n - 1; i > 0; i--) {
+      [list[0], list[i]] = [list[i], list[0]];
+      steps.push({type: "write", indices: [0, i]});
+      listPositions.push([...list]);
+
+      heapify(list, i, 0);
+   }
 
    return [steps, listPositions];
 }
