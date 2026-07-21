@@ -443,3 +443,70 @@ function countingSort(list) {
 
    return [steps, listPositions];
 }
+
+function mergeSort(list) {
+   let n = list.length;
+   let steps = [];
+   let listPositions = [[...list]];
+
+   function merge(list, left, mid, right) {
+      let leftList = list.slice(left, mid + 1);
+      let rightList = list.slice(mid + 1, right + 1);
+
+      for (let i = left; i <= mid; i++) {
+         steps.push({ type: "auxiliary", indices: [i] });
+      }
+
+      for (let i = mid + 1; i <= right; i++) {
+         steps.push({ type: "auxiliary", indices: [i] });
+      }
+
+      let i = 0;
+      let j = 0;
+      let k = left;
+
+      while (i < leftList.length && j < rightList.length) {
+         steps.push({ type: "read", indices: [left + i, mid + 1 + j] });
+
+         if (leftList[i] <= rightList[j]) {
+            list[k] = leftList[i];
+            i++;
+         } else {
+            list[k] = rightList[j];
+            j++;
+         }
+
+         steps.push({ type: "write", indices: [k] });
+         listPositions.push([...list]);
+         k++;
+      }
+
+      while (i < leftList.length) {
+         list[k] = leftList[i];
+         steps.push({ type: "write", indices: [k] });
+         listPositions.push([...list]);
+         i++;
+         k++;
+      }
+
+      while (i < rightList.length) {
+         list[k] = rightList[j];
+         steps.push({ type: "write", indices: [k] });
+         listPositions.push([...list]);
+         j++;
+         k++;
+      }
+   }
+   
+   function sort(list, left, right) {
+      if (left >= right) {return;}
+      let mid = Math.floor((left + right) / 2);
+      sort(list, left, mid);
+      sort(list, mid + 1, right);
+      merge(list, left, mid, right);
+   }
+
+   sort(list, 0, n - 1);
+
+   return [steps, listPositions];
+}
