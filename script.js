@@ -331,6 +331,38 @@ function shellSort(list) {
    return [steps, listPositions];
 }
 
+function radixSort(list) {
+   let n = list.length;
+   let steps = [];
+   let listPositions = [[...list]];
+   let max = Math.max(...list);
+   let base = settings.base;
+
+   for (let place = 1; Math.floor(max / place) > 0; place *= base) {
+      let buckets = Array.from({ length: base }, () => []);
+
+      for (let i = 0; i < n; i++) {
+         steps.push({ type: "read", indices: [i] });
+         let digit = Math.floor(list[i] / place) % base;
+         buckets[digit].push(list[i]);
+         steps.push({ type: "auxiliary", indices: [i] });
+      }
+
+      let index = 0;
+      for (let digit = 0; digit < base; digit++) {
+         for (let k = 0; k < buckets[digit].length; k++) {
+            list[index] = buckets[digit][k];
+            steps.push({ type: "write", indices: [index] });
+            listPositions.push([...list]);
+            index++;
+         }
+      }
+
+   }
+
+   return [steps, listPositions];
+}
+
 function bucketSort(list) {
    let n = list.length;
    let steps = [];
@@ -377,34 +409,37 @@ function bucketSort(list) {
    return [steps, listPositions];
 }
 
-function radixSort(list) {
+function countingSort(list) {
    let n = list.length;
    let steps = [];
    let listPositions = [[...list]];
    let max = Math.max(...list);
-   let base = settings.base;
+   let countList = new Array(max + 1).fill(0);
 
-   for (let place = 1; Math.floor(max / place) > 0; place *= base) {
-      let buckets = Array.from({ length: base }, () => []);
-
-      for (let i = 0; i < n; i++) {
-         steps.push({ type: "read", indices: [i] });
-         let digit = Math.floor(list[i] / place) % base;
-         buckets[digit].push(list[i]);
-         steps.push({ type: "auxiliary", indices: [i] });
-      }
-
-      let index = 0;
-      for (let digit = 0; digit < base; digit++) {
-         for (let k = 0; k < buckets[digit].length; k++) {
-            list[index] = buckets[digit][k];
-            steps.push({ type: "write", indices: [index] });
-            listPositions.push([...list]);
-            index++;
-         }
-      }
-
+   for (let i = 0; i < n; i++) {
+      steps.push({ type: "read", indices: [i] });
+      countList[list[i]]++;
+      steps.push({ type: "auxiliary", indices: [i] });
    }
+
+   for (let i = 1; i <= max; i++) {
+      countList[i] += countList[i - 1];
+   }
+
+   let output = new Array(n);
+   for (let i = n - 1; i >= 0; i--) {
+      steps.push({ type: "read", indices: [i] });
+      let value = list[i];
+      countList[value]--;
+      output[countList[value]] = value;
+   }
+
+   for (let i = 0; i < n; i++) {
+      list[i] = output[i];
+      steps.push({ type: "write", indices: [i] });
+      listPositions.push([...list]);
+   }
+
 
    return [steps, listPositions];
 }
