@@ -1,13 +1,12 @@
 let list;
 let settings = {
    n: 64,
-   rainbow: true,
+   rainbow: false,
    sort: "bubble",
-   readDelay: 5,
-   writeDelay: 5,
-   auxiliaryDelay: 5,
-   bucketCount: 10,
-   base: 10
+   readDelay: 4,
+   writeDelay: 4,
+   auxiliaryDelay: 4,
+   base: 16
 }
 let stopSort;
 
@@ -24,18 +23,43 @@ function reset(stop) {
 }
 
 function shuffle() {
-   for (let i = list.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [list[i], list[j]] = [list[j], list[i]];
-   }
+   let [steps, listPositions] = shuffleSort([...list]);
+   let j = 0;
 
-   render();
+   function animate() {
+      if (steps.length === 0) {
+         render();
+         return;
+      };
+
+      let step = steps.shift();
+      j++;
+      list = listPositions[j];
+      render({ writeIndices: step.indices });
+
+      setTimeout(animate, 500 / list.length);
+   }
+   animate();
 }
 
-function render(options = {}) {
+function shuffleSort(list) {
+   let steps = [];
+   let listPositions = [[...list]];
+
+   for (let i = 0; i < list.length; i++) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [list[i], list[j]] = [list[j], list[i]];
+      steps.push({ type: "write", indices: [i, j] });
+      listPositions.push([...list]);
+   }
+
+   return [steps, listPositions];
+}
+
+function render(indices = {}) {
    let sav = document.getElementById("sav");
    sav.innerHTML = "";
-   const { readIndices, writeIndices, auxiliaryIndices, checked, clear } = options;
+   const { readIndices, writeIndices, auxiliaryIndices, checked, clear } = indices;
    for (let i = 0; i < list.length; i++) {
       var bar = document.createElement("div");
 
@@ -108,15 +132,35 @@ function sort() {
 
 function map(value, low1, high1, low2, high2) { return low2 + (high2 - low2) * (value - low1) / (high1 - low1); }
 
-document.getElementById("n-slider").addEventListener("input", (e) => {
-   settings.n = e.target.value;
-   reset(false)
-   render();
-});
 
+
+
+
+
+
+
+
+
+// USER INTERFACE
 document.getElementById("algorithm-dropdown").addEventListener("change", (e) => {
    settings.sort = e.target.value;
 });
+
+document.getElementById("n-slider").addEventListener("input", (e) => {
+   let exponent = Number(e.target.value);
+   let actualValue = 16 * Math.pow(2, exponent);
+
+   settings.n = actualValue;
+   reset(false)
+   render();
+   console.log(actualValue)
+});
+
+
+
+
+
+
 
 
 
@@ -523,7 +567,7 @@ function bucketSort(list) {
    let n = list.length;
    let steps = [];
    let listPositions = [[...list]];
-   let bucketCount = settings.bucketCount
+   let bucketCount = settings.base;
    let buckets = Array.from({ length: bucketCount }, () => []);
 
    for (let i = 0; i < n; i++) {

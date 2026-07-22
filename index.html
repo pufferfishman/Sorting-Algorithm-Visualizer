@@ -19,12 +19,19 @@
       <input type="button" class="button" onClick="shuffle()" value="Shuffle">
       <input type="button" class="button" onClick="sort()" value="Sort">
       
-      <input type="range" id="n-slider" min="16" max="512" step="16" value="64">
+      <input type="range" id="n-slider" min="0" max="5" step="1" value="2">
+      <input type="range" id="base-slider" min="2" max="16" step="1" value="10">
+
+      <input type="number" id="read-delay-number" min="4" max="500" step="4" value="4">
+      <input type="number" id="write-delay-number" min="4" max="500" step="4" value="4">
+      <input type="number" id="auxiliary-delay-number" min="4" max="500" step="4" value="4">
+
+      <input type="checkbox" id="rainbow-checkbox" value="">
 
       <select name="algorithms" id="algorithm-dropdown">
          <optgroup label="Basic">
             <option value="bubble">Bubble Sort</option>
-            <option value="cocktail">Cocktail Sort</option>
+            <option value="cocktail">Cocktail Shaker Sort</option>
             <option value="selection">Selection Sort</option>
             <option value="insertion">Insertion Sort</option>
          </optgroup>
