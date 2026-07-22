@@ -400,7 +400,7 @@ function mergeSort(list) {
    return [steps, listPositions];
 }
 
-function quickSort(list) {
+function quickLomaroSort(list) {
    let n = list.length;
    let steps = [];
    let listPositions = [[...list]];
@@ -412,9 +412,76 @@ function quickSort(list) {
       for (let j = low; j < high; j++) {
          steps.push({ type: "read", indices: [j, high] });
          
-         
+         if (list[j] < pivot) {
+            i++;
+            if (i !== j) {
+               [list[i], list[j]] = [list[j], list[i]];
+               steps.push({ type: "write", indices: [i, j] });
+               listPositions.push([...list]);
+            }
+         }
+      }
+
+      if (i + 1 !== high) {
+         [list[i + 1], list[high]] = [list[high], list[i + 1]];
+         steps.push({ type: "write", indices: [i + 1, high] });
+         listPositions.push([...list]);
+      }
+
+      return (i + 1);
+   }
+
+   function sort(list, low, high) {
+      if (low < high) {
+         let pivotIndex = partition(list, low, high);
+         sort(list, low, pivotIndex - 1);
+         sort(list, pivotIndex + 1, high);
       }
    }
+
+   sort(list, 0, n - 1);
+
+   return [steps, listPositions];
+}
+
+function quickHoareSort(list) {
+   let n = list.length;
+   let steps = [];
+   let listPositions = [[...list]];
+
+   function partition(list, low, high) {
+      let pivot = list[Math.floor((low + high) / 2)];
+      let i = low - 1;
+      let j = high + 1;
+
+      while (true) {
+         do {
+            i++;
+            if (i !== j) steps.push({ type: "read", indices: [i, high] }); // comparing against pivot
+         } while (list[i] < pivot);
+
+         do {
+            j--;
+            steps.push({ type: "read", indices: [j, high] });
+         } while (list[j] > pivot);
+
+         if (i >= j) return j;
+
+         [list[i], list[j]] = [list[j], list[i]];
+         steps.push({ type: "write", indices: [i, j] });
+         listPositions.push([...list]);
+      }
+   }
+
+   function sort(list, low, high) {
+      if (low < high) {
+         let p = partition(list, low, high);
+         sort(list, low, p);
+         sort(list, p + 1, high);
+      }
+   }
+
+   sort(list, 0, n - 1);
 
    return [steps, listPositions];
 }
