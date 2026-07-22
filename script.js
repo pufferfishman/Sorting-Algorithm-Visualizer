@@ -1,10 +1,11 @@
 let list;
 let settings = {
    n: 64,
+   rainbow: true,
    sort: "bubble",
-   readDelay: 4,
-   writeDelay: 4,
-   auxiliaryDelay: 4,
+   readDelay: 5,
+   writeDelay: 5,
+   auxiliaryDelay: 5,
    bucketCount: 10,
    base: 10
 }
@@ -17,7 +18,7 @@ function reset(stop) {
    for (let i = 1; i <= settings.n; i++) { tempList.push(i); }
    list = tempList;
 
-   if (stop) { stopSort = true; } else { stopSort = false; }
+   if (!stopSort && stop) { stopSort = true; } else { stopSort = false; }
 
    render();
 }
@@ -43,15 +44,16 @@ function render(options = {}) {
       bar.style.width = 100 / list.length + "%";
 
       if (writeIndices && writeIndices.includes(i)) {
-         bar.style.backgroundColor = "var(--red)";
+         bar.style.backgroundColor = settings.rainbow ? "var(--white)" : "var(--red)";
       } else if (readIndices && readIndices.includes(i)) {
-         bar.style.backgroundColor = "var(--blue)";
+         bar.style.backgroundColor = settings.rainbow ? "var(--white)" : "var(--blue)";
       } else if (auxiliaryIndices && auxiliaryIndices.includes(i)) {
-         bar.style.backgroundColor = "var(--yellow)";
+         bar.style.backgroundColor = settings.rainbow ? "var(--white)" : "var(--yellow)";
       } else if (checked >= i) {
-         bar.style.backgroundColor = "var(--green)";
+         bar.style.backgroundColor = settings.rainbow ? "var(--white)" : "var(--green)";
       } else {
-         bar.style.backgroundColor = "var(--white)";
+         //bar.style.backgroundColor = "var(--white)";
+         bar.style.backgroundColor = settings.rainbow ? `hsl(${map(list[i], 0, list.length, 0, 360)}, 100%, 50%)` : "var(--white)";
       }
 
       sav.appendChild(bar);
@@ -331,6 +333,93 @@ function shellSort(list) {
    return [steps, listPositions];
 }
 
+function mergeSort(list) {
+   let n = list.length;
+   let steps = [];
+   let listPositions = [[...list]];
+
+   function merge(list, left, mid, right) {
+      let leftList = list.slice(left, mid + 1);
+      let rightList = list.slice(mid + 1, right + 1);
+
+      for (let i = left; i <= mid; i++) {
+         steps.push({ type: "auxiliary", indices: [i] });
+      }
+
+      for (let i = mid + 1; i <= right; i++) {
+         steps.push({ type: "auxiliary", indices: [i] });
+      }
+
+      let i = 0;
+      let j = 0;
+      let k = left;
+
+      while (i < leftList.length && j < rightList.length) {
+         steps.push({ type: "read", indices: [left + i, mid + 1 + j] });
+
+         if (leftList[i] <= rightList[j]) {
+            list[k] = leftList[i];
+            i++;
+         } else {
+            list[k] = rightList[j];
+            j++;
+         }
+
+         steps.push({ type: "write", indices: [k] });
+         listPositions.push([...list]);
+         k++;
+      }
+
+      while (i < leftList.length) {
+         list[k] = leftList[i];
+         steps.push({ type: "write", indices: [k] });
+         listPositions.push([...list]);
+         i++;
+         k++;
+      }
+
+      while (i < rightList.length) {
+         list[k] = rightList[j];
+         steps.push({ type: "write", indices: [k] });
+         listPositions.push([...list]);
+         j++;
+         k++;
+      }
+   }
+   
+   function sort(list, left, right) {
+      if (left >= right) {return;}
+      let mid = Math.floor((left + right) / 2);
+      sort(list, left, mid);
+      sort(list, mid + 1, right);
+      merge(list, left, mid, right);
+   }
+
+   sort(list, 0, n - 1);
+
+   return [steps, listPositions];
+}
+
+function quickSort(list) {
+   let n = list.length;
+   let steps = [];
+   let listPositions = [[...list]];
+
+   function partition(list, low, high) {
+      let pivot = list[high];
+      let i = low - 1;
+
+      for (let j = low; j < high; j++) {
+         steps.push({ type: "read", indices: [j, high] });
+         
+         
+      }
+   }
+
+   return [steps, listPositions];
+}
+
+
 function radixSort(list) {
    let n = list.length;
    let steps = [];
@@ -440,73 +529,6 @@ function countingSort(list) {
       listPositions.push([...list]);
    }
 
-
-   return [steps, listPositions];
-}
-
-function mergeSort(list) {
-   let n = list.length;
-   let steps = [];
-   let listPositions = [[...list]];
-
-   function merge(list, left, mid, right) {
-      let leftList = list.slice(left, mid + 1);
-      let rightList = list.slice(mid + 1, right + 1);
-
-      for (let i = left; i <= mid; i++) {
-         steps.push({ type: "auxiliary", indices: [i] });
-      }
-
-      for (let i = mid + 1; i <= right; i++) {
-         steps.push({ type: "auxiliary", indices: [i] });
-      }
-
-      let i = 0;
-      let j = 0;
-      let k = left;
-
-      while (i < leftList.length && j < rightList.length) {
-         steps.push({ type: "read", indices: [left + i, mid + 1 + j] });
-
-         if (leftList[i] <= rightList[j]) {
-            list[k] = leftList[i];
-            i++;
-         } else {
-            list[k] = rightList[j];
-            j++;
-         }
-
-         steps.push({ type: "write", indices: [k] });
-         listPositions.push([...list]);
-         k++;
-      }
-
-      while (i < leftList.length) {
-         list[k] = leftList[i];
-         steps.push({ type: "write", indices: [k] });
-         listPositions.push([...list]);
-         i++;
-         k++;
-      }
-
-      while (i < rightList.length) {
-         list[k] = rightList[j];
-         steps.push({ type: "write", indices: [k] });
-         listPositions.push([...list]);
-         j++;
-         k++;
-      }
-   }
-   
-   function sort(list, left, right) {
-      if (left >= right) {return;}
-      let mid = Math.floor((left + right) / 2);
-      sort(list, left, mid);
-      sort(list, mid + 1, right);
-      merge(list, left, mid, right);
-   }
-
-   sort(list, 0, n - 1);
 
    return [steps, listPositions];
 }
