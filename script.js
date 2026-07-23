@@ -153,8 +153,31 @@ document.getElementById("n-slider").addEventListener("input", (e) => {
    settings.n = actualValue;
    reset(false)
    render();
-   console.log(actualValue)
+   document.getElementById("n-label").innerHTML = "n = " + actualValue;
 });
+
+document.getElementById("base-slider").addEventListener("input", (e) => {
+   settings.readDelay = e.target.value;
+   document.getElementById("base-label").innerHTML = "base = " + e.target.value;
+});
+
+document.getElementById("read-delay-number").addEventListener("change", (e) => {
+   settings.readDelay = e.target.value;
+});
+
+document.getElementById("write-delay-number").addEventListener("change", (e) => {
+   settings.writeDelay = e.target.value;
+});
+
+document.getElementById("auxiliary-delay-number").addEventListener("change", (e) => {
+   settings.auxiliary = e.target.value;
+});
+
+document.getElementById("rainbow-checkbox").addEventListener("change", (e) => {
+   settings.rainbow = e.target.checked;
+   render();
+});
+
 
 
 

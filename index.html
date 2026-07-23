@@ -6,27 +6,23 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Sorting Algorithm Visualizer</title>
    <link rel="stylesheet" href="style.css">
-   
+
 </head>
 
 <body>
    <div id="sav-container">
       <div id="sav"></div>
    </div>
-   
+
    <div id="settings">
-      <input type="button" class="button" onClick="reset(true)" value="Reset">
-      <input type="button" class="button" onClick="shuffle()" value="Shuffle">
-      <input type="button" class="button" onClick="sort()" value="Sort">
-      
-      <input type="range" id="n-slider" min="0" max="5" step="1" value="2">
-      <input type="range" id="base-slider" min="2" max="16" step="1" value="10">
+      <div id="button-container">
+         <input type="button" class="button" onClick="sort()" value="Sort">
+         <div id="button-subcontainer">
+            <input type="button" class="button" onClick="reset(true)" value="Reset">
+            <input type="button" class="button" onClick="shuffle()" value="Shuffle">
+         </div>
 
-      <input type="number" id="read-delay-number" min="4" max="500" step="4" value="4">
-      <input type="number" id="write-delay-number" min="4" max="500" step="4" value="4">
-      <input type="number" id="auxiliary-delay-number" min="4" max="500" step="4" value="4">
-
-      <input type="checkbox" id="rainbow-checkbox" value="">
+      </div>
 
       <select name="algorithms" id="algorithm-dropdown">
          <optgroup label="Basic">
@@ -54,6 +50,37 @@
             <option value="counting">Counting Sort</option>
          </optgroup>
       </select>
+
+      <div class="range-container">
+         <label for="n-slider" id="n-label">n = 64</label>
+         <input type="range" id="n-slider" min="0" max="5" step="1" value="2">
+      </div>
+
+      <div class="range-container">
+         <label for="base-slider" id="base-label">base = 10</label>
+         <input type="range" id="base-slider" min="2" max="16" step="1" value="10">
+      </div>
+
+      <div class="delay-container">
+         <label for="read-delay-number" style="color: var(--blue)">Read Delay</label>
+         <input type="number" id="read-delay-number" min="4" max="500" step="4" value="4">
+      </div>
+
+      <div class="delay-container">
+         <label for="write-delay-number" style="color: var(--red)">Write Delay</label>
+         <input type="number" id="write-delay-number" min="4" max="500" step="4" value="4">
+      </div>
+
+      <div class="delay-container">
+         <label for="auxiliary-delay-number" style="color: var(--yellow)">Auxiliary Delay</label>
+         <input type="number" id="auxiliary-delay-number" min="4" max="500" step="4" value="4">
+      </div>
+
+      <div id="rainbow-container">
+         <input type="checkbox" id="rainbow-checkbox">
+         <label for="rainbow-checkbox">Rainbow Bars</label>
+         
+      </div>
    </div>
 
    <script src="script.js"></script>
