@@ -6,7 +6,7 @@ let settings = {
    readDelay: 4,
    writeDelay: 4,
    auxiliaryDelay: 4,
-   base: 16
+   base: 10
 }
 let stopSort;
 
@@ -19,6 +19,12 @@ function reset(stop) {
 
    if (!stopSort && stop) { stopSort = true; } else { stopSort = false; }
 
+   toggleUI("sort-button", true);
+   toggleUI("shuffle-button", false);
+   toggleUI("reset-button", true);
+   toggleUI("n-slider", false);
+   toggleUI("base-slider", false);
+
    render();
 }
 
@@ -26,9 +32,15 @@ function shuffle() {
    let [steps, listPositions] = shuffleSort([...list]);
    let j = 0;
 
+   toggleUI("shuffle-button", true);
+   toggleUI("n-slider", true);
+
    function animate() {
       if (steps.length === 0) {
          render();
+         toggleUI("sort-button", false);
+         toggleUI("reset-button", false);
+         toggleUI("n-slider", false);
          return;
       };
 
@@ -68,13 +80,13 @@ function render(indices = {}) {
       bar.style.width = 100 / list.length + "%";
 
       if (writeIndices && writeIndices.includes(i)) {
-         bar.style.backgroundColor = settings.rainbow ? "var(--white)" : "var(--red)";
+         bar.style.backgroundColor = settings.rainbow ? "white" : "var(--red)";
       } else if (readIndices && readIndices.includes(i)) {
-         bar.style.backgroundColor = settings.rainbow ? "var(--white)" : "var(--blue)";
+         bar.style.backgroundColor = settings.rainbow ? "white" : "var(--blue)";
       } else if (auxiliaryIndices && auxiliaryIndices.includes(i)) {
-         bar.style.backgroundColor = settings.rainbow ? "var(--white)" : "var(--yellow)";
+         bar.style.backgroundColor = settings.rainbow ? "white" : "var(--yellow)";
       } else if (checked >= i) {
-         bar.style.backgroundColor = settings.rainbow ? "var(--white)" : "var(--green)";
+         bar.style.backgroundColor = settings.rainbow ? "white" : "var(--green)";
       } else {
          //bar.style.backgroundColor = "var(--white)";
          bar.style.backgroundColor = settings.rainbow ? `hsl(${map(list[i], 0, list.length, 0, 360)}, 100%, 50%)` : "var(--white)";
@@ -87,6 +99,12 @@ function render(indices = {}) {
 function sort() {
    let [steps, listPositions] = window[settings.sort + "Sort"]([...list]);
    let j = 0;
+
+   toggleUI("sort-button", true);
+   toggleUI("shuffle-button", true);
+   toggleUI("shuffle-button", true);
+   toggleUI("n-slider", true);
+   toggleUI("base-slider", true);
 
    function animate() {
       if (steps.length === 0) {
@@ -102,6 +120,10 @@ function sort() {
          }
          completionCheck();
          render();
+         toggleUI("shuffle-button", false);
+         toggleUI("reset-button", true);
+         toggleUI("n-slider", false);
+         toggleUI("base-slider", false);
          return;
       }
 
@@ -142,6 +164,10 @@ function map(value, low1, high1, low2, high2) { return low2 + (high2 - low2) * (
 
 
 // USER INTERFACE
+function toggleUI(id, disabled) {
+   document.getElementById(id).disabled = disabled;
+}
+
 document.getElementById("algorithm-dropdown").addEventListener("change", (e) => {
    settings.sort = e.target.value;
 });
@@ -157,7 +183,7 @@ document.getElementById("n-slider").addEventListener("input", (e) => {
 });
 
 document.getElementById("base-slider").addEventListener("input", (e) => {
-   settings.readDelay = e.target.value;
+   settings.base = e.target.value;
    document.getElementById("base-label").innerHTML = "base = " + e.target.value;
 });
 
@@ -453,9 +479,9 @@ function mergeSort(list) {
          k++;
       }
    }
-   
+
    function sort(list, left, right) {
-      if (left >= right) {return;}
+      if (left >= right) { return; }
       let mid = Math.floor((left + right) / 2);
       sort(list, left, mid);
       sort(list, mid + 1, right);
@@ -478,7 +504,7 @@ function quickLomaroSort(list) {
 
       for (let j = low; j < high; j++) {
          steps.push({ type: "read", indices: [j, high] });
-         
+
          if (list[j] < pivot) {
             i++;
             if (i !== j) {
@@ -524,7 +550,7 @@ function quickHoareSort(list) {
       while (true) {
          do {
             i++;
-            if (i !== j) steps.push({ type: "read", indices: [i, high] }); // comparing against pivot
+            if (i !== j) steps.push({ type: "read", indices: [i, high] });
          } while (list[i] < pivot);
 
          do {

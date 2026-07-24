@@ -16,10 +16,10 @@
 
    <div id="settings">
       <div id="button-container">
-         <input type="button" class="button" onClick="sort()" value="Sort">
+         <input id="sort-button" type="button" onClick="sort()" value="Sort" disabled>
          <div id="button-subcontainer">
-            <input type="button" class="button" onClick="reset(true)" value="Reset">
-            <input type="button" class="button" onClick="shuffle()" value="Shuffle">
+            <input id="reset-button" type="button" onClick="reset(true)" value="Reset">
+            <input id="shuffle-button" type="button" onClick="shuffle()" value="Shuffle">
          </div>
 
       </div>
@@ -27,7 +27,7 @@
       <select name="algorithms" id="algorithm-dropdown">
          <optgroup label="Basic">
             <option value="bubble">Bubble Sort</option>
-            <option value="cocktail">Cocktail Shaker Sort</option>
+            <option value="cocktail">Cocktail Sort</option>
             <option value="selection">Selection Sort</option>
             <option value="insertion">Insertion Sort</option>
          </optgroup>
@@ -63,23 +63,32 @@
 
       <div class="delay-container">
          <label for="read-delay-number" style="color: var(--blue)">Read Delay</label>
-         <input type="number" id="read-delay-number" min="4" max="500" step="4" value="4">
+         <div class="delay-subcontainer">
+            <input type="number" id="read-delay-number" min="4" max="500" step="4" value="4">
+            <span class="unit">ms</span>
+         </div>
       </div>
 
       <div class="delay-container">
          <label for="write-delay-number" style="color: var(--red)">Write Delay</label>
+         <div class="delay-subcontainer">
          <input type="number" id="write-delay-number" min="4" max="500" step="4" value="4">
+         <span class="unit">ms</span>
+         </div>
       </div>
 
       <div class="delay-container">
          <label for="auxiliary-delay-number" style="color: var(--yellow)">Auxiliary Delay</label>
+         <div class="delay-subcontainer">
          <input type="number" id="auxiliary-delay-number" min="4" max="500" step="4" value="4">
+         <span class="unit">ms</span>
+         </div>
       </div>
 
       <div id="rainbow-container">
          <input type="checkbox" id="rainbow-checkbox">
-         <label for="rainbow-checkbox">Rainbow Bars</label>
-         
+         <label for="rainbow-checkbox">Rainbow <br> Mode</label>
+
       </div>
    </div>
 

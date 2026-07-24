@@ -5,7 +5,7 @@
    --white: #EDE6E3;
    --red: #ce0818;
    --yellow: #FFA737;
-   --green: #04A777;
+   --green: #22d422;
    --blue: #187ec7;
 }
 
@@ -13,7 +13,7 @@
    margin: 0;
    padding: 0;
    font-family: "Google Sans";
-   font-size: 24px;
+   font-size: 20px;
 }
 
 body {
@@ -39,7 +39,8 @@ body {
 #settings {
    display: flex;
    justify-content: center;
-   gap: 2vw;
+   align-items: center;
+   gap: 2.5vw;
 }
 
 
@@ -48,32 +49,108 @@ label {
    font-size: 24px;
 }
 
+input[type=button] {
+   background-color: var(--white);
+   border: none;
+   padding: 5px;
+   cursor: pointer;
+}
+
 #button-container {
    display: flex;
    flex-direction: column;
    align-items: stretch;
+   gap: 10px;
 }
 
-#button-sub-container {
+#button-subcontainer {
    display: flex;
    justify-content: center;
    align-items: center;
+   gap: 10px;
 }
 
 .range-container {
    display: flex;
    flex-direction: column;
+   justify-content: center;
    align-items: center;
+   gap: 5px;
+}
+
+input[type=range] {
+   -webkit-appearance: none;
+   width: 125px;
+   padding: 3px;
+   background-color: var(--white);
+   cursor: pointer;
+   margin-bottom: 5px;
+}
+
+input[type=range]::-webkit-slider-thumb {
+   -webkit-appearance: none;
+   height: 15px;
+   width: 15px;
+   background-color: var(--black);
 }
 
 .delay-container {
    display: flex;
    flex-direction: column;
    align-items: center;
+   gap: 5px;
 }
 
 #rainbow-container {
    display: flex;
    justify-content: center;
    align-items: center;
+}
+
+#rainbow-checkbox {
+   transform: scale(3);
+   margin: 20px;
+   margin-right: 25px;
+   cursor: pointer;
+}
+
+input[type=number] {
+   width: 60px;
+   text-align: right;
+   direction: rtl;
+   padding-right: 5px;
+}
+
+span {
+   color: var(--white);
+}
+
+.delay-subcontainer {
+   display: flex;
+   justify-content: center;
+   gap: 5px;
+   align-items: center;
+   margin-bottom: 5px;
+}
+
+#algorithm-dropdown {
+   width: 230px;
+   height: 40px; 
+   padding-left: 10px;
+   cursor: pointer;
+}
+
+input[type=button]:disabled {
+   color: rgb(32, 32, 32);
+   background-color: #5f5f5f;
+}
+
+input[type=range]:disabled {
+   -webkit-appearance: none;
+   color: rgb(32, 32, 32);
+   background-color: #5f5f5f;
+}
+
+input:disabled {
+   cursor: not-allowed;
 }
