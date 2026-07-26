@@ -10,6 +10,13 @@
 </head>
 
 <body>
+   <div id="operations-container">
+      <div id="operations-text">Operations:</div>
+      <div id="read-operations" style="color: var(--blue)" class="operation">0</div>
+      <div id="write-operations" style="color: var(--red)" class="operation">0</div>
+      <div id="auxiliary-operations" style="color: var(--yellow)" class="operation">0</div>
+   </div>
+
    <div id="sav-container">
       <div id="sav"></div>
    </div>
@@ -72,16 +79,16 @@
       <div class="delay-container">
          <label for="write-delay-number" style="color: var(--red)">Write Delay</label>
          <div class="delay-subcontainer">
-         <input type="number" id="write-delay-number" min="4" max="500" step="4" value="4">
-         <span class="unit">ms</span>
+            <input type="number" id="write-delay-number" min="4" max="500" step="4" value="4">
+            <span class="unit">ms</span>
          </div>
       </div>
 
       <div class="delay-container">
          <label for="auxiliary-delay-number" style="color: var(--yellow)">Auxiliary Delay</label>
          <div class="delay-subcontainer">
-         <input type="number" id="auxiliary-delay-number" min="4" max="500" step="4" value="4">
-         <span class="unit">ms</span>
+            <input type="number" id="auxiliary-delay-number" min="4" max="500" step="4" value="4">
+            <span class="unit">ms</span>
          </div>
       </div>
 

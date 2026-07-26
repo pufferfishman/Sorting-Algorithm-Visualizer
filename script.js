@@ -8,6 +8,7 @@ let settings = {
    auxiliaryDelay: 4,
    base: 10
 }
+let operations = [0, 0, 0];
 let stopSort;
 
 reset(false);
@@ -24,6 +25,8 @@ function reset(stop) {
    toggleUI("reset-button", true);
    toggleUI("n-slider", false);
    toggleUI("base-slider", false);
+
+   operations = [0, 0, 0];
 
    render();
 }
@@ -106,6 +109,8 @@ function sort() {
    toggleUI("n-slider", true);
    toggleUI("base-slider", true);
 
+   incrementOperations(true);
+
    function animate() {
       if (steps.length === 0) {
          let k = 0;
@@ -147,6 +152,8 @@ function sort() {
          render({ auxiliaryIndices: step.indices });
          delay = settings.auxiliaryDelay;
       }
+      incrementOperations(false, step.type);
+
       setTimeout(animate, delay);
    }
    animate();
@@ -166,6 +173,35 @@ function map(value, low1, high1, low2, high2) { return low2 + (high2 - low2) * (
 // USER INTERFACE
 function toggleUI(id, disabled) {
    document.getElementById(id).disabled = disabled;
+}
+
+function incrementOperations(reset, operation) {
+   let index;
+
+   if (reset) {
+      operations = [0, 0, 0];
+      document.getElementById("read-operations").innerHTML = operations[0];
+      document.getElementById("write-operations").innerHTML = operations[1];
+      document.getElementById("auxiliary-operations").innerHTML = operations[2];
+      return;
+   }
+
+   switch (operation) {
+      case "read":
+         index = 0;
+         break;
+      case "write":
+         index = 1;
+         break;
+      case "auxiliary":
+         index = 2;
+         break;
+   }
+
+   operations[index]++;
+   document.getElementById("read-operations").innerHTML = operations[0];
+   document.getElementById("write-operations").innerHTML = operations[1];
+   document.getElementById("auxiliary-operations").innerHTML = operations[2];
 }
 
 document.getElementById("algorithm-dropdown").addEventListener("change", (e) => {

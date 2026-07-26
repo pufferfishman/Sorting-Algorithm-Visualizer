@@ -29,7 +29,7 @@ body {
 }
 
 #sav {
-   margin: 50px 10vw;
+   margin: 20px 10vw 30px 10vw;
    width: 100vw;
    height: 750px;
    display: flex;
@@ -153,4 +153,22 @@ input[type=range]:disabled {
 
 input:disabled {
    cursor: not-allowed;
+}
+
+#operations-container {
+   display: flex;
+   flex-direction: row;
+   justify-content: flex-start;
+   margin-left: 10vw;
+   margin-top: 25px;
+   align-items: center;
+   gap: 1vw;
+}
+
+.operation {
+   width: 60px;
+}
+
+div {
+   color: var(--white);
 }
