@@ -31,7 +31,7 @@ body {
 #sav {
    margin: 20px 10vw 30px 10vw;
    width: 100vw;
-   height: 750px;
+   height: 70vh;
    display: flex;
    align-items: flex-end;
 }
