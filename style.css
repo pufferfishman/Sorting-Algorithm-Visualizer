@@ -13,7 +13,7 @@
    margin: 0;
    padding: 0;
    font-family: "Google Sans";
-   font-size: 20px;
+   font-size: 18px;
 }
 
 body {
@@ -31,7 +31,7 @@ body {
 #sav {
    margin: 20px 10vw 30px 10vw;
    width: 100vw;
-   height: 750px;
+   height: 74vh;
    display: flex;
    align-items: flex-end;
 }
@@ -40,13 +40,14 @@ body {
    display: flex;
    justify-content: center;
    align-items: center;
+   flex-wrap: wrap;
    gap: 2.5vw;
 }
 
 
 label {
    color: var(--white);
-   font-size: 24px;
+   font-size: 20px;
 }
 
 input[type=button] {
@@ -107,12 +108,19 @@ input[type=range]::-webkit-slider-thumb {
    align-items: center;
 }
 
-#rainbow-checkbox {
+#sound-container {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+input[type=checkbox] {
    transform: scale(3);
    margin: 20px;
    margin-right: 25px;
    cursor: pointer;
 }
+
 
 input[type=number] {
    width: 60px;

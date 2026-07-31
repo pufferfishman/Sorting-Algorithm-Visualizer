@@ -1,7 +1,8 @@
 let list;
 let settings = {
    n: 64,
-   rainbow: false,
+   rainbow: true,
+   sound: false,
    sort: "bubble",
    readDelay: 4,
    writeDelay: 4,
@@ -51,6 +52,7 @@ function shuffle() {
       j++;
       list = listPositions[j];
       render({ writeIndices: step.indices });
+      if (settings.sound) { playTone(list[step.indices[0]], list.length, 0.03); }
 
       setTimeout(animate, 500 / list.length);
    }
@@ -103,6 +105,8 @@ function sort() {
    let [steps, listPositions] = window[settings.sort + "Sort"]([...list]);
    let j = 0;
 
+   stopSort = false;
+
    toggleUI("sort-button", true);
    toggleUI("shuffle-button", true);
    toggleUI("shuffle-button", true);
@@ -116,6 +120,7 @@ function sort() {
          let k = 0;
          function completionCheck() {
             render({ checked: k });
+            playTone(list[k], list.length, 0.03);
             k++;
             if (k < list.length) {
                setTimeout(completionCheck, 4);
@@ -142,11 +147,13 @@ function sort() {
 
       if (step.type === "read") {
          render({ readIndices: step.indices });
+         if (settings.sound) { playTone(list[step.indices[0]], list.length); }
          delay = settings.readDelay;
       } else if (step.type === "write") {
          j++;
          list = listPositions[j];
          render({ writeIndices: step.indices });
+         if (settings.sound) { playTone(list[step.indices[0]], list.length); }
          delay = settings.writeDelay;
       } else if (step.type === "auxiliary") {
          render({ auxiliaryIndices: step.indices });
@@ -161,6 +168,26 @@ function sort() {
 
 function map(value, low1, high1, low2, high2) { return low2 + (high2 - low2) * (value - low1) / (high1 - low1); }
 
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+function playTone(value, maxValue, duration = 0.05) {
+   let oscillator = audioCtx.createOscillator();
+   let gainNode = audioCtx.createGain();
+
+   oscillator.connect(gainNode);
+   gainNode.connect(audioCtx.destination);
+
+   let frequency = map(value, 0, maxValue, 100, 1000);
+   oscillator.frequency.value = frequency;
+   oscillator.type = "sine";
+
+   gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+   gainNode.gain.linearRampToValueAtTime(0.1, audioCtx.currentTime + 0.005);
+   gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + duration);
+
+   oscillator.start(audioCtx.currentTime);
+   oscillator.stop(audioCtx.currentTime + duration);
+}
 
 
 
@@ -239,6 +266,14 @@ document.getElementById("rainbow-checkbox").addEventListener("change", (e) => {
    settings.rainbow = e.target.checked;
    render();
 });
+
+document.getElementById("sound-checkbox").addEventListener("change", (e) => {
+   settings.sound = e.target.checked;
+   if (settings.sound && audioCtx.state === "suspended") {
+      audioCtx.resume();
+   }
+});
+
 
 
 
