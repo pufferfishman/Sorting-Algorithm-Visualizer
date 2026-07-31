@@ -17,7 +17,8 @@ Main features include:
 - Customizable amount of bars (n)
 - Customizable base (only applies to some sorts)
 - Customizable delay for read, write, and auxiliary operations
-- RAINBOW MODE!!! (highly recommended for best experience)
+- Audio effects which use sine wave frequencies to represent bar heights
+- RAINBOW MODE!!! (recommended for best experience)
 
 <img width="1498" height="1200" alt="Screenshot 2026-07-29 152136" src="https://github.com/user-attachments/assets/0fe77cba-4b47-4ee4-8906-3fcf50a277da" />
 
@@ -32,6 +33,6 @@ Implementing the algorithms was also a complex task and I had to use help from o
 <img width="2876" height="1706" alt="Screenshot 2026-07-29 151634" src="https://github.com/user-attachments/assets/9aac533e-bf8e-4812-a916-29aeed63d618" />
 
 ### AI Use:
-- AI was used minimally for small tasks such as debugging
+- AI was used for tasks such as debugging or explaining complicated concepts
 - Simpler sorting algorithms were implemented by hand
 - More complex algorithms were implemented with the help of pseudocode
