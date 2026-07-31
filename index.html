@@ -4,17 +4,23 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Sorting Algorithm Visualizer</title>
+   <title>Sorty</title>
    <link rel="stylesheet" href="style.css">
 
 </head>
 
 <body>
-   <div id="operations-container">
-      <div id="operations-text">Operations:</div>
-      <div id="read-operations" style="color: var(--blue)" class="operation">0</div>
-      <div id="write-operations" style="color: var(--red)" class="operation">0</div>
-      <div id="auxiliary-operations" style="color: var(--yellow)" class="operation">0</div>
+   <div id="top-container">
+      <div id="operations-container">
+         <div id="operations-text">Operations:</div>
+         <div id="read-operations" style="color: var(--blue)" class="operation">0</div>
+         <div id="write-operations" style="color: var(--red)" class="operation">0</div>
+         <div id="auxiliary-operations" style="color: var(--yellow)" class="operation">0</div>
+      </div>
+      <div id="timers-container">
+         <div class="timer" id="real-timer">Real Time: &nbsp; 0.00s</div>
+         <div class="timer" id="internal-timer">Internal Time: &nbsp; 0.00ms</div>
+      </div>
    </div>
 
    <div id="sav-container">

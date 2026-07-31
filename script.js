@@ -102,25 +102,36 @@ function render(indices = {}) {
 }
 
 function sort() {
-   let [steps, listPositions] = window[settings.sort + "Sort"]([...list]);
    let j = 0;
+
+   let startTime = performance.now();
+   let [steps, listPositions] = window[settings.sort + "Sort"]([...list]);
+   let endTime = performance.now();
+
+   let internalTime = endTime - startTime;
+   document.getElementById("internal-timer").innerHTML = "Internal Time: &nbsp; " + internalTime.toFixed(1) + "ms";
+
 
    stopSort = false;
 
    toggleUI("sort-button", true);
-   toggleUI("shuffle-button", true);
    toggleUI("shuffle-button", true);
    toggleUI("n-slider", true);
    toggleUI("base-slider", true);
 
    incrementOperations(true);
 
+   function updateTimers() {
+      let realElapsed = (performance.now() - startTime) / 1000;
+      document.getElementById("real-timer").innerHTML = "Real Time: &nbsp; " + realElapsed.toFixed(1) + "s";
+   }
+
    function animate() {
       if (steps.length === 0) {
          let k = 0;
          function completionCheck() {
             render({ checked: k });
-            if (settings.sound) playTone(list[k], list.length, 0.03); }
+            if (settings.sound) playTone(list[k], list.length, 0.03);
             k++;
             if (k < list.length) {
                setTimeout(completionCheck, 4);
@@ -134,6 +145,7 @@ function sort() {
          toggleUI("reset-button", true);
          toggleUI("n-slider", false);
          toggleUI("base-slider", false);
+         updateTimers();
          return;
       }
 
@@ -159,12 +171,16 @@ function sort() {
          render({ auxiliaryIndices: step.indices });
          delay = settings.auxiliaryDelay;
       }
+
+      internalTime += delay;
       incrementOperations(false, step.type);
+      updateTimers();
 
       setTimeout(animate, delay);
    }
    animate();
 }
+
 
 function map(value, low1, high1, low2, high2) { return low2 + (high2 - low2) * (value - low1) / (high1 - low1); }
 
