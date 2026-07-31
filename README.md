@@ -17,6 +17,7 @@ Main features include:
 - Customizable amount of bars (n)
 - Customizable base (only applies to some sorts)
 - Customizable delay for read, write, and auxiliary operations
+- Real time and internal time timers which show how long the sort took behind the scenes
 - Audio effects which use sine wave frequencies to represent bar heights
 - RAINBOW MODE!!! (recommended for best experience)
 
@@ -31,6 +32,12 @@ The most difficult part of the project for me was making the system used for ren
 Implementing the algorithms was also a complex task and I had to use help from online forums and pseudocode.
 
 <img width="2876" height="1706" alt="Screenshot 2026-07-29 151634" src="https://github.com/user-attachments/assets/9aac533e-bf8e-4812-a916-29aeed63d618" />
+
+### Browser limitations:
+There are some limitations that come from making this program on the web:
+- setTimeout() delays can't be less than 4 milliseconds which puts a cap on how fast the visualization can be displayed
+- The browser can't track time more precise than 0.1 milliseconds which means the internal time display could be subject to rounding errors or slightly incorrect values
+- Real time display will continue running while the tab is not active even though the sorting will stop which makes the values not sync up
 
 ### AI Use:
 - AI was used for tasks such as debugging or explaining complicated concepts
