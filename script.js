@@ -120,7 +120,7 @@ function sort() {
          let k = 0;
          function completionCheck() {
             render({ checked: k });
-            playTone(list[k], list.length, 0.03);
+            if (settings.sound) playTone(list[k], list.length, 0.03); }
             k++;
             if (k < list.length) {
                setTimeout(completionCheck, 4);
